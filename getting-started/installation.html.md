@@ -4,6 +4,48 @@ layout: guide
 tags: ['guide', page']
 guideOrder: 10
 ---
+## Raspian Jessie Installation
+Install Raspian Jessie on your SD-Card from [raspberrypi.org](https://www.raspberrypi.org/downloads/).
+Start your Raspberry Pi and connect with SSH or Putty.
+
+Raspian Jessie insalled an old node.js version, you have to deinstall it:
+
+sudo apt-get purge nodejs
+
+If you want a static IP open dhcpcd.conf:
+
+sudo nano /etc/dhcpcd.conf
+
+and add this at the end (edit the IP-Adress to your Network):
+
+interface eth0
+static ip_address=192.168.178.190/24
+static routers=192.168.178.1
+static domain_name_servers=192.168.178.1 8.8.8.8 4.2.2.1
+
+Now you can configure Raspian with raspi-config:
+
+sudo raspi-config
+1. Expand Filesystem
+2. Change User Password
+3. Internationalisation Options
+3.1 Change Locale for German users "de_DE.UTF-8 UTF-8" aktivate with the space key and disable "en_GB.UTF8 UTF8" with the space kek then "ok"
+3.1.1 Now aktivate "de_DE.UTF-8" and "ok"
+go a second time to Internationalisation Options
+3.2 Change Timezone and aktivate your timezone
+then we are ready and change "Finish"
+
+I recomered to reboot now.
+
+sudo reboot
+
+Now we update Raspian:
+
+sudo apt-get update && sudo apt-get upgrade
+
+It’s a good time for a reboot
+
+sudo reboot
 
 ## Node.js Installation
 
@@ -65,3 +107,18 @@ You should end up with these files in your `pimatic-app` directory:
 
 Now, you need to set the password for the admin user. Open the file `config.json` using a text editor (e.g., `nano`)
 and search for the string `"users"`. Then, change the value of the `password` property for user "admin" below.
+
+Now we can start pimatic for the first time:
+
+sudo node /home/pi/pimatic-app/node_modules/pimatic/pimatic.js
+
+You see the debug messages from Pimatic if the end shows:
+
+19:31:55.621 [pimatic-mobile-frontend] packing static assets
+19:31:56.324 [pimatic-mobile-frontend] packing static assets finished
+19:31:56.339 [pimatic-mobile-frontend] rendering html
+19:32:10.747 [pimatic-mobile-frontend] rendering html finished
+19:32:10.835 [pimatic] Listening for HTTP-request on port 80...
+
+You can try to connect with your web browser.
+If all is OK you stop Pimatic by pressing “Strg+C” on the keyboard.
